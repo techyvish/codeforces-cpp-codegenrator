@@ -1,19 +1,19 @@
-ClassName:Email
-MethodName:emailCounts
-Parameters:int:numberOfLaters,vector<string>:states
-Returns:int
+ClassName:NOPalindroms
+MethodName:checkforpalindroms
+Parameters:string:inputnumnbers,string:stringtocheck
+Returns:string
 input
-5
-0 1 0 1 0
+3 3
+cba
 output
-3
+NO
 input
-5
-1 1 0 0 1
+3 4
+cba
 output
-4
+cbd
 input
-2
-0 0
+4 4
+abcd
 output
-0
+abda

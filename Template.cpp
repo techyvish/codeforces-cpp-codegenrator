@@ -5,6 +5,7 @@
 //  Created by Vishal Patel on 9/09/2014.
 //  Copyright (c) 2014 Vishal Patel. All rights reserved.
 //
+
 #include <cstdio>
 #include <cmath>
 #include <cstring>
@@ -23,12 +24,16 @@
 #include <map>
 #include <set>
 #include <iostream>
-
-
 using namespace std;
 
+class NOPalindroms {
+public:
+    string checkforpalindroms(string inputnumnbers, string stringtocheck) {
+    }
+};
+
 // CUT begin
-ifstream data("/Users/Shared/Codeforces/input.txt");
+ifstream data("/Users/Shared/Algorithms/AlgorithmTutorials/input.txt");
 
 string next_line() {
     string s;
@@ -69,28 +74,46 @@ string to_string(string t) {
 
 bool double_equal(const double &a, const double &b) { return b==b && a==a && fabs(b - a) <= 1e-9 * max(1.0, fabs(a) ); }
 
+bool do_test(string inputnumnbers,string stringtocheck,string __answer) {
+    NOPalindroms *instance = new NOPalindroms();
+    string __result = instance->checkforpalindroms(inputnumnbers, stringtocheck);
+    delete instance;
+    if (__answer == __result ) {
+        cout << "PASSED!" << endl;
+        return true;
+    }
+    else {
+        cout << "FAILED!" << endl;
+        cout << "           Expected: " << to_string(__answer) << endl;
+        cout << "           Received: " << to_string(__result) << endl;
+        return false;
+    }
+    return true;
+}
 int run_test(bool mainProcess, const set<int> &case_set, const string command) {
     int cases = 0, passed = 0;
+    // skip first four lines.
+    next_line();
+    next_line();
+    next_line();
+    next_line();
     while (true) {
         if (next_line().find("input") != 0)
             break;
         //start writing here
-        int numberOfLaters;
-        from_stream(numberOfLaters);
-        vector<string> states;
-        from_stream(states);
+        string inputnumnbers;
+        from_stream(inputnumnbers);
+        string stringtocheck;
+        from_stream(stringtocheck);
         next_line();
-        int __answer;
+        string __answer;
         from_stream(__answer);
         cases++;
         cout << "  Testcase #" << cases - 1 << " ... ";
-        if( do_test(numberOfLaters,states,__answer)) {
-            passed++
+        if( do_test(inputnumnbers,stringtocheck,__answer)) {
+            passed++;
         }
         //end writing here
-        double PT = T / 60.0, TT = 75.0;
-        cout << "Time   : " << T / 60 << " minutes " << T % 60 << " secs" << endl;
-        cout << "Score  : " << 1000 * (0.3 + (0.7 * TT * TT) / (10.0 * PT * PT + TT * TT)) << " points" << endl;
     }
     return 0;
 }
@@ -107,12 +130,6 @@ int main(int argc, char *argv[]) {
             cases.insert(atoi(argv[i]));
         }
     }
-    if (mainProcess) {
-        cout << "ChemicalMixing (1000 Points)" << endl << endl;
-    }
+    cout << "Start testing" << endl << endl << endl;
     return run_test(mainProcess, cases, argv[0]);
-}
-
-bool do_test(vector<int> volume, vector<int> solute, int minVolume, double desiredStrength, double __expected) {
-    return true;
 }
