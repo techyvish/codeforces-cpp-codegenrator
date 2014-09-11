@@ -1,11 +1,13 @@
 __author__ = 'Vishal'
 
 import fileinput
+import os
+import shutil
 
-cpp_types = ["int", "float", "double", "string", "vector<int>", "vector<string>", "vector<double>", "set<int>",
-             "set<char>", "set<double>", "set<float>"];
+cpp_types = ["int", "float", "double", "string","long","long long", "vector<int>", "vector<string>", "vector<double>", "set<int>",
+             "set<char>", "set<double>", "set<float>"]
 
-
+containers = ["vector<int>", "vector<string>", "vector<double>", "set<int>", "set<char>", "set<double>", "set<float>"]
 def main():
     filename = "Template.cpp"
 
@@ -40,8 +42,16 @@ def main():
     start_point = get_start_point(filename, "using namespace std;")
     fileinput.close()
     generate_class(filename, start_point, finalvarnamelist, finalvartypelist, inputs)
+    fileinput.close()
 
+    #update main function for i/o
+    start_point = get_start_point(filename, "Start testing")
+    fileinput.close()
+    update_main(filename, start_point, finalvarnamelist, finalvartypelist, inputs)
+    fileinput.close()
 
+    # rename file
+    copy_rename("Template.cpp", inputs[0].split(":")[1]+".cpp")
 
 def get_start_point(filename, start_point_text):
     for line in fileinput.input(filename, inplace=0):
@@ -191,7 +201,89 @@ def write_class(finalvarnamelist, finalvartypelist, inputs):
         function_args = function_args + vartype + " " + varname + ", "
     function_args = function_args[:-2]
     print(" " * 4 + finalvartypelist[len(finalvartypelist)-1] + " " + methodname + "("+function_args+") {")
+    return_val = " " * 8 + "return "
+    return_type = finalvartypelist[-1]
+    if return_type == "string":
+        return_val += "\" \";"
+    if return_type == "int":
+        return_val += "0;"
+    if return_type == "double":
+        return_val += "0.0;"
+    if return_type == "float":
+        return_val += "0.0;"
+    if return_type == "vector<int>":
+        return_val += "vector<int>();"
+    if return_type == "vector<char>":
+        return_val += "vector<char>();"
+    if return_type == "vector<double>":
+        return_val += "vector<double>();"
+    if return_type == "long":
+        return_val += "0;"
+    if return_type == "long long":
+        return_val += "0;"
+    print(return_val)
     print(" " * 4 + "}")
     print("};")
+
+
+def update_main(filename, start_point, finalvarnamelist, finalvartypelist, inputs):
+    for line in fileinput.input(filename, inplace=1):
+        newline = line.rstrip('\r\n')
+        if fileinput.lineno() == start_point:
+            print(newline)
+            append_main(finalvarnamelist, finalvartypelist, inputs)
+        else:
+            print(newline)
+
+
+def append_main(finalvarnamelist, finalvartypelist, inputs):
+    print(" " * 4 + "//start input for on line judge")
+    for (vartype, varname) in zip(finalvartypelist[:-1], finalvarnamelist[:-1]):
+        if vartype not in containers:
+            print(" " * 4 + vartype + " " + varname + " ;")
+            print(" " * 4 + "cin >> " + varname + " ;")
+            print(" " * 4 + "cin.clear() ; ")
+            print(" " * 4 + "cin.ignore(numeric_limits<streamsize>::max(), '\\n');")
+        else:
+            print(" " * 4 + "cout << \"enter no of elements :\";")
+            print(" " * 4 + "int " + "size_" + varname + " ;")
+            print(" " * 4 + "cin >> " + "size_" + varname + " ;")
+            print(" " * 4 + vartype + " " + varname + " ;")
+            print(" " * 4 + "cin.clear() ; ")
+            print(" " * 4 + "cin.ignore(numeric_limits<streamsize>::max(), '\\n');")
+            print(" " * 4 + "for ( int i = 0 ; i < "+"size_" + varname + " ; i++ ) {")
+            element_type = vartype.split("<")[1][:-1]
+            if element_type == "string":
+                print(" " * 8 + "cout << \"enter \" << i << \"th " + element_type + " :\";")
+                print(" " * 8 + "string  input_var ;")
+                print(" " * 8 + "cin.clear();");
+                print(" " * 8 + "getline(cin, input_var) ;")
+            else:
+                print(" " * 8 + "cout \"<< enter \" << i << \"th " + element_type + " :\";")
+                print(" " * 8 + element_type + " " + "input_var ;")
+                print(" " * 8 + "cin >> " + "input_var ;")
+            print(" " * 8 + varname + ".push_back( input_var ) ;")
+            print(" " * 8 + "cin.clear();");
+            print(" " * 4 + "}")
+    print(" " * 8 + "//calling class")
+    classname = inputs[0].split(":")[1]
+    methodname = inputs[1].split(":")[1]
+    print(" " * 4 + classname + " *instance = new " + classname + "() ;")
+    print(" " * 4 + finalvartypelist[len(finalvartypelist)-1] + " __result = instance->" + methodname + "(" + ", ".join(finalvarnamelist[:-1]) + ");")
+    print(" " * 4 + "delete instance;")
+    print(" " * 4 + "//end input for on line judge")
+
+
+def copy_rename(old_file_name, new_file_name):
+        src_dir= os.curdir
+        dst_dir= os.path.join(os.curdir , "subfolder")
+        src_file = os.path.join(src_dir, old_file_name)
+        shutil.copy(src_file,dst_dir)
+
+        dst_file = os.path.join(dst_dir, old_file_name)
+        new_dst_file_name = os.path.join(dst_dir, new_file_name)
+        os.rename(dst_file, new_dst_file_name)
+        shutil.copy(new_dst_file_name, os.curdir)
+        os.remove(new_dst_file_name)
 
 main()

@@ -26,12 +26,6 @@
 #include <iostream>
 using namespace std;
 
-class NOPalindroms {
-public:
-    string checkforpalindroms(string inputnumnbers, string stringtocheck) {
-    }
-};
-
 // CUT begin
 ifstream data("/Users/Shared/Algorithms/AlgorithmTutorials/input.txt");
 
@@ -74,9 +68,9 @@ string to_string(string t) {
 
 bool double_equal(const double &a, const double &b) { return b==b && a==a && fabs(b - a) <= 1e-9 * max(1.0, fabs(a) ); }
 
-bool do_test(string inputnumnbers,string stringtocheck,string __answer) {
-    NOPalindroms *instance = new NOPalindroms();
-    string __result = instance->checkforpalindroms(inputnumnbers, stringtocheck);
+bool do_test(string sizes,long long __answer) {
+    Squres *instance = new Squres();
+    long long __result = instance->getRequiredTiles(sizes);
     delete instance;
     if (__answer == __result ) {
         cout << "PASSED!" << endl;
@@ -101,16 +95,14 @@ int run_test(bool mainProcess, const set<int> &case_set, const string command) {
         if (next_line().find("input") != 0)
             break;
         //start writing here
-        string inputnumnbers;
-        from_stream(inputnumnbers);
-        string stringtocheck;
-        from_stream(stringtocheck);
+        string sizes;
+        from_stream(sizes);
         next_line();
-        string __answer;
+        long long __answer;
         from_stream(__answer);
         cases++;
         cout << "  Testcase #" << cases - 1 << " ... ";
-        if( do_test(inputnumnbers,stringtocheck,__answer)) {
+        if( do_test(sizes,__answer)) {
             passed++;
         }
         //end writing here

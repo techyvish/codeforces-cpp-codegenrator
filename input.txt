@@ -1,19 +1,25 @@
-ClassName:NOPalindroms
-MethodName:checkforpalindroms
-Parameters:string:inputnumnbers,string:stringtocheck
+ClassName:Joke
+MethodName:amusingJoke
+Parameters:vector<string>:input
 Returns:string
 input
-3 3
-cba
+3
+SANTACLAUS
+DEDMOROZ
+SANTAMOROZDEDCLAUS
+output
+YES
+input
+3
+PAPAINOEL
+JOULUPUKKI
+JOULNAPAOILELUPUKKI
 output
 NO
 input
-3 4
-cba
+3
+BABBONATALE
+FATHERCHRISTMAS
+BABCHRISTMASBONATALLEFATHER
 output
-cbd
-input
-4 4
-abcd
-output
-abda
+NO
